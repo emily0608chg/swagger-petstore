@@ -16,6 +16,8 @@
 
 package io.swagger.petstore.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -26,14 +28,21 @@ import java.util.List;
 
 @XmlRootElement(name = "Pet")
 public class Pet {
+    @JsonProperty("id")
     private Long id;
+    @JsonProperty("category")
     private Category category;
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("photoUrls")
     private List<String> photoUrls = new ArrayList<>();
+    @JsonProperty("tags")
     private List<Tag> tags = new ArrayList<>();
+    @JsonProperty("status")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String status;
 
-    @XmlElement(name = "id")
+//    @XmlElement(name = "id")
     public long getId() {
         return id;
     }
@@ -42,7 +51,7 @@ public class Pet {
         this.id = id;
     }
 
-    @XmlElement(name = "category")
+//    @XmlElement(name = "category")
     public Category getCategory() {
         return category;
     }
@@ -51,7 +60,7 @@ public class Pet {
         this.category = category;
     }
 
-    @XmlElement(name = "name")
+//    @XmlElement(name = "name")
     public String getName() {
         return name;
     }
@@ -60,8 +69,8 @@ public class Pet {
         this.name = name;
     }
 
-    @XmlElementWrapper(name = "photoUrls")
-    @XmlElement(name = "photoUrl")
+//    @XmlElementWrapper(name = "photoUrls")
+//    @XmlElement(name = "photoUrl")
     public List<String> getPhotoUrls() {
         return photoUrls;
     }
@@ -70,8 +79,8 @@ public class Pet {
         this.photoUrls = photoUrls;
     }
 
-    @XmlElementWrapper(name = "tags")
-    @XmlElement(name = "tag")
+//    @XmlElementWrapper(name = "tags")
+//    @XmlElement(name = "tag")
     public List<Tag> getTags() {
         return tags;
     }
@@ -80,8 +89,6 @@ public class Pet {
         this.tags = tags;
     }
 
-    @XmlElement(name = "status")
-    @Schema(description = "pet status in the store", allowableValues = "available,pending,sold")
     public String getStatus() {
         return status;
     }
@@ -89,4 +96,6 @@ public class Pet {
     public void setStatus(final String status) {
         this.status = status;
     }
+
+
 }

@@ -24,17 +24,24 @@ import io.swagger.petstore.model.Pet;
 import io.swagger.petstore.model.Tag;
 import io.swagger.petstore.utils.Util;
 
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.List;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaInflectorServerCodegen", date = "2017-04-08T15:48:56.501Z")
+@Path("/pet")
 public class PetController {
 
     private static PetData petData = new PetData();
 
+    @GET
+    @Path("/findByStatus")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public ResponseContext findPetsByStatus(final RequestContext request, final String status) {
+
         if (status == null) {
             return new ResponseContext()
                     .status(Response.Status.BAD_REQUEST)
@@ -52,6 +59,9 @@ public class PetController {
                 .entity(petByStatus);
     }
 
+    @GET
+    @Path("/{petId}")
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext getPetById(final RequestContext request, final Long petId) {
         if (petId == null) {
             return new ResponseContext()
@@ -70,6 +80,10 @@ public class PetController {
         return new ResponseContext().status(Response.Status.NOT_FOUND).entity("Pet not found");
     }
 
+    @POST
+    @Path("/{petId}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext updatePetWithForm(final RequestContext request, final Long petId, final String name, final String status) {
         if (petId == null) {
             return new ResponseContext()
@@ -100,6 +114,10 @@ public class PetController {
                 .entity(existingPet);
     }
 
+    @DELETE
+    @Path("/{petId}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext deletePet(final RequestContext request, final String apiKey, final Long petId) {
         if (petId == null) {
             return new ResponseContext()
@@ -123,6 +141,10 @@ public class PetController {
 
     }
 
+    @POST
+    @Path("/{petId}/uploadImage")
+    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext uploadFile(final RequestContext request, final Long petId, final String apiKey, final File file) {
         if (petId == null) {
             return new ResponseContext()
@@ -154,6 +176,9 @@ public class PetController {
         }
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext addPet(final RequestContext request, final Pet pet) {
         if (pet == null) {
             return new ResponseContext()
@@ -164,16 +189,23 @@ public class PetController {
         petData.addPet(pet);
 
         return new ResponseContext()
-                .contentType(Util.getMediaType(request))
+                .contentType(MediaType.APPLICATION_JSON)
                 .entity(pet);
     }
 
-    public ResponseContext addPet(final RequestContext request, final Long id, final String name, final Category category,
+    @POST
+    @Path("/detailed")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ResponseContext addPetDetailed(final RequestContext request, final Long id, final String name, final Category category,
                                   final List<String> urls, final List<Tag> tags, final String status) {
         final Pet pet = PetData.createPet(id, category, name, urls, tags, status);
         return addPet(request, pet);
     }
 
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext updatePet(final RequestContext request, final Pet pet) {
         if (pet == null) {
             return new ResponseContext()
@@ -194,12 +226,16 @@ public class PetController {
                 .entity(pet);
     }
 
-    public ResponseContext updatePet(final RequestContext request, final Long id, final String name, final Category category,
+    public ResponseContext updatePetDetails(final RequestContext request, final Long id, final String name, final Category category,
                                   final List<String> urls, final List<Tag> tags, final String status) {
         final Pet pet = PetData.createPet(id, category, name, urls, tags, status);
         return updatePet(request, pet);
     }
 
+    @Path("/findByTags")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public ResponseContext findPetsByTags(final RequestContext request, final List<String> tags) {
         if (tags == null || tags.size() == 0) {
             return new ResponseContext()
