@@ -23,20 +23,29 @@ import io.swagger.petstore.model.Order;
 import io.swagger.petstore.utils.Util;
 import org.joda.time.DateTime;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Date;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaInflectorServerCodegen", date = "2017-04-08T15:48:56.501Z")
+@Path("/store") // Base path for this controller
 public class OrderController {
 
     private static OrderData orderData = new OrderData();
 
+    @Path("/inventory")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext getInventory(final RequestContext request) {
         return new ResponseContext()
                 .contentType(Util.getMediaType(request))
                 .entity(orderData.getCountByStatus());
     }
 
+    @Path("/order/{orderId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext getOrderById(final RequestContext request, final Long orderId) {
         if (orderId == null) {
             return new ResponseContext()
@@ -55,6 +64,10 @@ public class OrderController {
         return new ResponseContext().status(Response.Status.NOT_FOUND).entity("Order not found");
     }
 
+    @Path("/order")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public ResponseContext placeOrder(final RequestContext request, final Order order) {
         if (order == null) {
             return new ResponseContext()
@@ -74,6 +87,8 @@ public class OrderController {
         return placeOrder(request,order);
     }
 
+    @Path("/order/{orderId}")
+    @DELETE
     public ResponseContext deleteOrder(final RequestContext request, final Long orderId) {
         if (orderId == null) {
             return new ResponseContext()

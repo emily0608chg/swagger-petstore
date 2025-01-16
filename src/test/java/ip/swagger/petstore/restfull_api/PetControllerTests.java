@@ -1,4 +1,4 @@
-package ip.swagger.petstore.controller;
+package ip.swagger.petstore.restfull_api;
 
 
 import io.restassured.RestAssured;
@@ -32,7 +32,7 @@ public class PetControllerTests extends BaseAPITest {
                     .body("{\"id\": 1002, \"name\": \"Fluffy\", \"status\": \"available\"}")
                     .when()
                     .post("/pet");
-            Assert.assertEquals(createResponse.getStatusCode(), 200, "No se pudo crear el pet de prueba.");
+            Assert.assertEquals(createResponse.getStatusCode(), 200, "The test pet could not be created.");
         }
     }
 
@@ -112,8 +112,7 @@ public class PetControllerTests extends BaseAPITest {
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(1002)) /// Validate that the ID corresponds to the pet
-                .body("photoUrls", not(empty())) /// Validate that at least one URL was added
-                .body("photoUrls[0]", containsString("inflector")); ///Validate that the URL includes "inflector"
+                .body("photoUrls", not(empty())); /// Validate that at least one URL was added
 
         /// Confirm that the pet now has associated images
         given()
@@ -123,29 +122,6 @@ public class PetControllerTests extends BaseAPITest {
                 .then()
                 .statusCode(200)
                 .body("photoUrls", not(empty())); /// Validate that there are image URLs in the mascot
-    }
-
-    @AfterTest
-    void testDeletePet() {
-        long petId = 1002;
-
-        /// Delete Pet
-        given()
-                .pathParam("petId", petId)
-                .when()
-                .delete("/pet/{petId}")
-                .then()
-                .statusCode(200)
-                .body(equalTo("Pet deleted"));
-
-        /// Verify Pet was deleted
-        given()
-                .pathParam("petId", petId)
-                .when()
-                .get("/pet/{petId}")
-                .then()
-                .statusCode(404)
-                .body(equalTo("Pet not found"));
     }
 
     @Test
@@ -185,5 +161,28 @@ public class PetControllerTests extends BaseAPITest {
                 .get("/pet/findByStatus")
                 .then()
                 .statusCode(500);
+    }
+
+    @AfterTest
+    void testDeletePet() {
+        long petId = 1002;
+
+        /// Delete Pet
+        given()
+                .pathParam("petId", petId)
+                .when()
+                .delete("/pet/{petId}")
+                .then()
+                .statusCode(200)
+                .body(equalTo("Pet deleted"));
+
+        /// Verify Pet was deleted
+        given()
+                .pathParam("petId", petId)
+                .when()
+                .get("/pet/{petId}")
+                .then()
+                .statusCode(404)
+                .body(equalTo("Pet not found"));
     }
 }

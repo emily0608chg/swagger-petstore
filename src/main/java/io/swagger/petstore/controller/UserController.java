@@ -23,14 +23,20 @@ import io.swagger.petstore.model.User;
 import io.swagger.petstore.utils.Util;
 import org.apache.commons.lang3.RandomUtils;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Date;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaInflectorServerCodegen", date = "2017-04-08T15:48:56.501Z")
+@Path("/user")
 public class UserController {
 
     private static UserData userData = new UserData();
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext createUser(final RequestContext request, final User user) {
         if (user == null) {
             return new ResponseContext()
@@ -44,6 +50,7 @@ public class UserController {
                 .entity(user);
     }
 
+
     public ResponseContext createUser(final RequestContext request, final Long id, final String username,
                                       final String firstName, final String lastName, final String email,
                                       final String password, final String phone, final Integer userStatus) {
@@ -51,6 +58,9 @@ public class UserController {
         return createUser(request, user);
     }
 
+    @Path("/{username}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext getUserByName(final RequestContext request, final String username) {
         if (username == null) {
             return new ResponseContext()
@@ -68,6 +78,10 @@ public class UserController {
                 .entity(user);
     }
 
+    @Path("/createWithArray")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext createUsersWithArrayInput(final RequestContext request, final User[] users) {
         if (users == null || users.length == 0) {
             return new ResponseContext()
@@ -84,6 +98,10 @@ public class UserController {
                 .entity(users);
     }
 
+    @Path("/createWithList")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext createUsersWithListInput(final RequestContext request, final User[] users) {
         if (users == null || users.length == 0) {
             return new ResponseContext()
@@ -100,6 +118,9 @@ public class UserController {
                 .entity(users);
     }
 
+    @Path("/login")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
     public ResponseContext loginUser(final RequestContext request, final String username, final String password) {
         Date date = new Date(System.currentTimeMillis() + 3600000);
         return new ResponseContext()
@@ -109,6 +130,9 @@ public class UserController {
                 .entity("Logged in user session: " + RandomUtils.nextLong());
     }
 
+    @Path("/logout")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
     public ResponseContext logoutUser(final RequestContext request) {
         return new ResponseContext()
                 .contentType(Util.getMediaType(request))
@@ -116,6 +140,8 @@ public class UserController {
 
     }
 
+    @Path("/{username}")
+    @DELETE
     public ResponseContext deleteUser(final RequestContext request, final String username) {
         if (username == null) {
             return new ResponseContext()
@@ -136,6 +162,10 @@ public class UserController {
         }
     }
 
+    @Path("/{username}")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public ResponseContext updateUser(final RequestContext request, final String username, final User user) {
         if (username == null) {
             return new ResponseContext()

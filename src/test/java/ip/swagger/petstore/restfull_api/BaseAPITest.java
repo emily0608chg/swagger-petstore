@@ -1,4 +1,4 @@
-package ip.swagger.petstore.controller;
+package ip.swagger.petstore.restfull_api;
 
 import io.restassured.RestAssured;
 import org.testng.annotations.BeforeTest;
